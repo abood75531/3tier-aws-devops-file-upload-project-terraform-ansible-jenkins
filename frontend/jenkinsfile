@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+
+    environment {
+        FRONTEND_IP = "3.110.216.135"
+        SSH_USER    = "ec2-user"     // Ubuntu असेल तर ubuntu
+        SSH_KEY     = "terraform"
+        DEPLOY_PATH = "/usr/share/nginx/html"
+        REPO_URL    = "https://github.com/Maheshshelke05/file-uploading-project-frontend.git"
+    }
+
+    stages {
+
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
+
+        stage('Clone Frontend Repository') {
+            steps {
+                git branch: 'main', url: "${REPO_URL}"
+            }
+        }
+
+        stage('Prepare Remote Directory') {
+            steps {
+                sshagent(credentials: ["${SSH_KEY}"]) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ${SSH_USER}@${FRONTEND_IP} "
+                        rm -rf /home/${SSH_USER}/frontend
+                        mkdir -p /home/${SSH_USER}/frontend
+                    "
+                    '''
+                }
+            }
+        }
+
+        stage('Upload Frontend Files') {
+            steps {
+                sshagent(credentials: ["${SSH_KEY}"]) {
+                    sh '''
+                    scp -o StrictHostKeyChecking=no -r * \
+                    ${SSH_USER}@${FRONTEND_IP}:/home/${SSH_USER}/frontend/
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to Nginx Path') {
+            steps {
+                sshagent(credentials: ["${SSH_KEY}"]) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ${SSH_USER}@${FRONTEND_IP} "
+                        sudo rm -rf ${DEPLOY_PATH}/*
+                        sudo cp -r /home/${SSH_USER}/frontend/* ${DEPLOY_PATH}/
+                        sudo chown -R nginx:nginx ${DEPLOY_PATH} || true
+                        sudo chown -R www-data:www-data ${DEPLOY_PATH} || true
+                    "
+                    '''
+                }
+            }
+        }
+
+        stage('Restart Nginx') {
+            steps {
+                sshagent(credentials: ["${SSH_KEY}"]) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ${SSH_USER}@${FRONTEND_IP} "
+                        sudo systemctl restart nginx
+                    "
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Frontend deployment completed successfully."
+        }
+        failure {
+            echo "Frontend deployment failed."
+        }
+    }
+}

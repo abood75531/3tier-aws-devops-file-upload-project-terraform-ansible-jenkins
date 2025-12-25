@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    environment {
+        BASTION_IP = "3.110.216.135"
+        BACKEND_IP = "10.0.2.173"
+        SSH_USER   = "ec2-user"
+        REPO_URL  = "https://github.com/Maheshshelke05/file-uploading-project-backend.git"
+        DEPLOY_TO = "/usr/share/nginx/html"
+    }
+
+    stages {
+
+        stage('Deploy Backend via Bastion') {
+            steps {
+                sshagent(credentials: ['terraform']) {
+                    sh """
+                    ssh -A -o StrictHostKeyChecking=no ${SSH_USER}@${BASTION_IP} '
+                        ssh -o StrictHostKeyChecking=no ${SSH_USER}@${BACKEND_IP} "
+                            sudo yum install git -y &&
+                            sudo rm -rf ${DEPLOY_TO}/* &&
+                            sudo git clone ${REPO_URL} /tmp/backend &&
+                            sudo cp -r /tmp/backend/* ${DEPLOY_TO}/ &&
+                            sudo rm -rf /tmp/backend &&
+                            sudo systemctl restart nginx
+                        "
+                    '
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Backend Deployment Successful"
+        }
+        failure {
+            echo "❌ Backend Deployment Failed"
+        }
+    }
+}

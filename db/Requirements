@@ -1,0 +1,30 @@
+sudo yum update -y
+sudo yum install mariadb105-server -y
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
+systemctl status mariadb
+sudo mysql_secure_installation
+Allow Remote Connection (Backend Server)
+sudo nano /etc/my.cnf.d/mariadb-server.cnf
+add:- bind-address = 0.0.0.0
+sudo systemctl restart mariadb
+Create Database & Application User
+CREATE DATABASE file_upload;
+
+CREATE USER 'appuser'@'%' IDENTIFIED BY 'Mahesh05';
+
+GRANT ALL PRIVILEGES ON file_upload.* TO 'appuser'@'%';
+
+FLUSH PRIVILEGES;
+
+Create Required Table
+USE file_upload;
+
+CREATE TABLE files (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    filename VARCHAR(255),
+    file_url TEXT,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+mysql -h DB_PRIVATE_IP -u appuser -p file_upload

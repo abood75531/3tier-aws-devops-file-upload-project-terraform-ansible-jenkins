@@ -1,0 +1,8 @@
+Install Packages (Backend EC2)
+sudo yum install httpd php php-mysqli -y
+sudo systemctl start httpd
+sudo systemctl enable httpd
+
+Folder Permissions
+sudo chown -R apache:apache backend/
+sudo chmod -R 755 backend/

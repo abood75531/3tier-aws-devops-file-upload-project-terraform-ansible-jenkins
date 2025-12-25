@@ -1,0 +1,130 @@
+---
+# ==============================
+# FRONTEND SERVER
+# ==============================
+- name: Install and configure frontend (nginx + php-fpm)
+  hosts: frontend
+  become: yes
+
+  vars:
+    pkg_nginx: nginx
+    pkg_php: php-fpm
+    svc_nginx: nginx
+    svc_php: php-fpm
+    backend_ip: 10.0.2.173
+    conf_file: /etc/nginx/conf.d/custom.conf
+
+  tasks:
+    - name: Install nginx
+      ansible.builtin.dnf:
+        name: "{{ pkg_nginx }}"
+        state: present
+
+    - name: Install php-fpm
+      ansible.builtin.dnf:
+        name: "{{ pkg_php }}"
+        state: present
+
+    - name: Start and enable nginx
+      ansible.builtin.systemd:
+        name: "{{ svc_nginx }}"
+        state: started
+        enabled: yes
+
+    - name: Start and enable php-fpm
+      ansible.builtin.systemd:
+        name: "{{ svc_php }}"
+        state: started
+        enabled: yes
+
+    - name: Configure nginx reverse proxy
+      ansible.builtin.blockinfile:
+        path: "{{ conf_file }}"
+        create: yes
+        block: |
+          server {
+              listen       80;
+              server_name  localhost;
+
+              location / {
+                  proxy_pass http://{{ backend_ip }};
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+              }
+          }
+         
+
+      notify: restart nginx
+
+  handlers:
+    - name: restart nginx
+      ansible.builtin.systemd:
+        name: "{{ svc_nginx }}"
+        state: restarted
+
+# ==============================
+# BACKEND SERVER
+# ==============================
+- name: Install backend (nginx + php-fpm + mariadb)
+  hosts: backend
+  become: yes
+
+  vars:
+    pkg_nginx: nginx
+    pkg_php: php-fpm
+    pkg_db: mariadb105-server
+    svc_nginx: nginx
+    svc_php: php-fpm
+    svc_db: mariadb
+
+  tasks:
+    - name: Install backend packages
+      ansible.builtin.dnf:
+        name:
+          - "{{ pkg_nginx }}"
+          - "{{ pkg_php }}"
+          - "{{ pkg_db }}"
+        state: present
+
+    - name: Start and enable nginx
+      ansible.builtin.systemd:
+        name: "{{ svc_nginx }}"
+        state: started
+        enabled: yes
+
+    - name: Start and enable php-fpm
+      ansible.builtin.systemd:
+        name: "{{ svc_php }}"
+        state: started
+        enabled: yes
+
+    - name: Start and enable mariadb
+      ansible.builtin.systemd:
+        name: "{{ svc_db }}"
+        state: started
+        enabled: yes
+
+# ==============================
+# DATABASE SERVER
+# ==============================
+- name: Install database server (mariadb only)
+  hosts: db
+  become: yes
+
+  vars:
+    pkg_db: mariadb105-server
+    svc_db: mariadb
+
+  tasks:
+    - name: Install mariadb
+      ansible.builtin.dnf:
+        name: "{{ pkg_db }}"
+        state: present
+
+    - name: Start and enable mariadb
+      ansible.builtin.systemd:
+        name: "{{ svc_db }}"
+        state: started
+        enabled: yes
